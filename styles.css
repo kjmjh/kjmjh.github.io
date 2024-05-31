@@ -1,21 +1,4 @@
 /* styles.css */
-body, html {
-    height: 100%;
-    margin: 0;
-    overflow: hidden;
-}
-.videocontainer {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    zindex: 1; /* 确保视频层位于页面内容的下方 */
-}
-#bgVideo {
-    minwidth: 100%; /* 使视频宽度始终至少为100% */
-    minheight: 100%; /* 使视频高度始终至少为100% */
-    objectfit: cover; /* 保持视频的宽高比，使视频铺满整个容器 */
-    position: absolute;
+.gradientbackground {
+    background: lineargradient(45deg, #f3ec78, #af4261, #00a6ed, #00f2c8);
 }
