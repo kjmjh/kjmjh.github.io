@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>kj23和mjh的小站</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        html {
+            height: 100%;
+        }
+
+        body {
+            height: 100%;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, rgb(161, 196, 253), rgb(194, 233, 251));
+            transition: all 0.3s ease;
+        }
+
+        .project-card {
+            width: 300px;
+            background: rgba(255, 255, 255, 0.352);
+            margin: 10px;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            overflow: hidden;
+            max-height: 100px;
+            transition: max-height 0.3s ease, transform 0.3s ease;
+            /* Add transform transition */
+            opacity: 0;
+        }
+        .fadeIn{
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .project-card:hover {
+            transform: scale(1.05);
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.626);
+        }
+
+        .additional-info {
+            display: none;
+            margin-top: 10px;
+            border-top: 1px solid #ccc;
+            transition: all 0.3s ease;
+        }
+
+        .project-card.open {
+            display: block;
+            max-height: 700px;
+            transition: max-height 0.3s ease;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.626);
+        }
+
+        .additional-info {
+            display: block;
+            max-height: 500px;
+        }
+
+        .container {
+            height: 100%;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+            align-content: center;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .button {
+            border-radius: 8px;
+            padding: 10px 20px;
+            transition: max-height 0.3s ease;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.626);
+            color: #000;
+            text-decoration: none;
+        }
+
+        .button:hover {
+            background-color: #f7f7f7;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .pulse {
+            animation: pulse 0.5s ease-in-out;
+        }
+
+        body {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+        }
+    </style>
+    <title>我的项目</title>
+</head>
+
+<body>
+    <div class="container">
+        <div class="project-card" onclick="toggleCard(this)">
+            <h3>Windows 12 网页版</h3>
+            <p>使用 HTML、CSS、JS，在网络上模拟、创新操作系统。</p>
+            <div class="additional-info">
+                <p>开发者：谭景元、我、782</p>
+                <a class="button" href="https://github.com/tjy-gitnub/win12">项目链接</a>
+            </div>
+        </div>
+        <div class="project-card" onclick="toggleCard(this)">
+            <h3>流浪地球 MOSS</h3>
+            <p>复刻流浪地球 MOSS 的模型以及对话</p>
+            <div class="additional-info">
+                <p>开发者：我自己</p>
+                <a class="button" href="https://www.bilibili.com/video/BV1Dh411g7aR/">项目视频</a>
+            </div>
+        </div>
+        <div class="project-card" onclick="toggleCard(this)">
+            <h3>鲲鹏之眼</h3>
+            <p>基于人工智能的智慧教室管理系统</p>
+            <div class="additional-info">
+                <p>开发者：我自己</p>
+                <a class="button" href="https://github.com/NB-Group/Intelligent-Classroom-System">项目链接</a>
+            </div>
+        </div>
+        <div class="project-card" onclick="toggleCard(this)">
+            <h3>NB系列软件</h3>
+            <p>基于python的便利工具</p>
+            <div class="additional-info">
+                <p>开发者：我自己</p>
+                <a class="button" href="https://github.com/NB-Group/NB-software">项目链接</a>
+            </div>
+        </div>
+        <div class="project-card" onclick="toggleCard(this)">
+            <h3>NB-Group 个人主页</h3>
+            <p>没错就是这个网站</p>
+            <div class="additional-info">
+                <p>开发者：我自己</p>
+                <a class="button" href="https://github.com/NB-Group/NB-Group.github.io">项目链接</a>
+            </div>
+        </div>
+
+        <div class="project-card" onclick="toggleCard(this)">
+            <h3>知至恒信息技术公司交易警报系统</h3>
+            <p>贡献了两行代码</p>
+            <div class="additional-info">
+                <p>开发者：知至恒信息技术有限公司团队与我</p>
+            </div>
+        </div>
+    </div>
+    <!-- 添加更多项目卡片 -->
+    <script>
+        function toggleCard(card) {
+            document.querySelectorAll('.project-card').forEach(function (card) {
+                if (card !== this) {
+                    card.classList.remove('open');
+                }
+            }, card);
+            card.classList.toggle('open');
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const projectCards = document.querySelectorAll('.project-card');
+
+            var i = 1;
+            projectCards.forEach((card) => {
+                setTimeout(function () {
+                    card.classList.add('fadeIn');
+                    card.style.opacity = 1;
+                }, i * 100);
+                // Set initial transition delay for staggered effect during page load
+                card.style.transitionDelay = `${Math.random() * 0.5}s`;
+
+                // Add event listeners for hover and click
+                card.addEventListener('mouseenter', function () {
+                    card.style.transitionDelay = '0s'; // Remove transition delay on hover
+                    card.style.transform = 'scale(1.05)';
+                });
+
+                card.addEventListener('mouseleave', function () {
+                    card.style.transitionDelay = `0s`; // Restore staggered effect on mouse leave
+                    card.style.transform = 'scale(1)';
+                });
+
+                card.addEventListener('click', function () {
+                    card.style.transitionDelay = '0s'; // Remove transition delay on click
+                });
+                i += 1;
+            });
+        });
+
+
+    </script>
+</body>
+
+</html>
