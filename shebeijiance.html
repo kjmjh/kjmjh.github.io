@@ -3,11 +3,10 @@
 <head>
 <meta charset="utf-8">
 <title>设备状态检测</title>
-<body><div id="loadback" style="background-color:#000;width:100%;height:100%;z-index:105;position:fixed;transition:10s;top:0;left:0;color: #d2d2d2;">
+<body><div id="loadback" style="background-color:#000;width:100%;height:100%;z-index:105;position:fixed;transition:20s;top:0;left:0;color: #d2d2d2;">
     <p id="loadbacktext" style="width:100%;position:absolute;left:0;font-size:50px;transition:1s;height:100px;top:calc(50% - 80px);text-align:center;opacity:0;margin:0;">
-        嗨,别来无恙啊!,您的设备状态是……</p>
-    <p id="loadbacktexteng" style="width:100%;position:absolute;left:0;font-size:25px;transition:1s;height:50px;top:50%;text-align:center;opacity:0;margin:0;">
-        Hi,terribly nice to meet you!</p>
+        ,您的设备状态是……</p>
+    <p id="loadbacktexteng" style="width:100%;position:absolute;left:0;font-size:25px;transition:1s;height:50px;top:50%;text-align:center;opacity:0;margin:0;"></p>
     <script>setTimeout(()=>{document.getElementById('loadbacktext').style.opacity=1;document.getElementById('loadbacktexteng').style.opacity = 1;},100);
         setTimeout(()=>{document.getElementById('loadbacktext').style.opacity=0;document.getElementById('loadbacktexteng').style.opacity = 0;},2100);
         setTimeout(()=>{document.getElementById('loadbacktext').innerText = '与君初相识，犹如故人归。欢迎来到kj23的网站';
