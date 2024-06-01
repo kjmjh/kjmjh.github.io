@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>个人信息</title>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      document.body.style.background = "linear-gradient(135deg, #a1c4fd, #c2e9fb)";
+
+      // id=1的元素删除hide class
+      setTimeout(function () {
+        document.getElementById("1").classList.remove("hide");
+      }, 100);
+
+      setTimeout(function () {
+        document.getElementById("2").classList.remove("hide");
+        // Add typewriter effect to the second column of the table
+        typeWriter("introduction", 1);
+      }, 300);
+
+      function typeWriter(tableId, columnIndex) {
+        var table = document.getElementById(tableId);
+        var cells = table.getElementsByTagName("td");
+        var text = cells[columnIndex].innerText; // Use innerText here
+        cells[columnIndex].innerText = ""; // Clear the content
+
+        function type(i) {
+          if (i < text.length) {
+            cells[columnIndex].innerText += text.charAt(i);
+            setTimeout(function () {
+              type(i + 1);
+            }, 10); // Adjust the typing speed here (milliseconds)
+          }
+        }
+
+        type(0);
+      }
+
+    });
+  </script>
+  <style>
+    html {
+      height: 100%;
+      width: 100%;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Arial', sans-serif;
+    }
+
+    .container {
+      width: 80%;
+      margin: 50px auto;
+      background: rgba(255, 255, 255, 0.352);
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+      animation: fadeIn 1s ease-out;
+      backdrop-filter: blur(80px) saturate(1.3);
+      opacity: 1;
+      transition: all 0.5s;
+
+    }
+
+    .container:hover {
+      background: rgba(255, 255, 255, 0.626);
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateX(-50px);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    #personalInfo {
+      text-align: center;
+      font-size: 24px;
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    #infoTable {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    #infoTable td {
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    #infoTable td.birthdate {
+      font-style: italic;
+    }
+
+    .blur-background {
+      background: url('background-image.jpg') center/cover no-repeat fixed;
+      filter: blur(10px);
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      z-index: -1;
+    }
+
+    .hide {
+      display: none;
+    }
+  </style>
+</head>
+
+<body style="background: black;">
+  <div class="container hide" id="1">
+    <div id="personalInfo">个人信息</div>
+    <table id="infoTable">
+      <tr>
+        <td>姓名</td>
+        <td>姚博轩</td>
+      </tr>
+      <tr>
+        <td>学校</td>
+        <td>毕业于南阳镇第二寄读小学<br>就读于：鱼台县第三实验中学</td>
+      </tr>
+      <tr>
+        <td>生日</td>
+        <td class="birthdate">2010/9/24</td>
+      </tr>
+      <tr>
+        <td>年龄</td>
+        <td>就不告诉你</td>
+      </tr>
+      <tr>
+        <td>身份</td>
+        <td>目前读初一</td>
+      </tr>
+      <tr>
+        <td>学习成绩</td>
+        <td>一般……</td>
+      </tr>
+      <tr>
+        <td>获奖信息</td>
+        <td>啥也没有</td>
+      </tr>
+      <tr>
+        <td>喜欢的游戏</td>
+        <td>Minecraft,暗区突围</td>
+      </tr>
+    </table>
+  </div>
+  <div class="container hide" id="2">
+    <div id="personalInfo">自我介绍</div>
+    <table id="introduction">
+      <tr>
+        <td></td>
+        <td>被同学叫做:老大………………………………………………………………
+          <br><br>
+          ……………………………………………………………………………………………………………………_***爱妃（朱运芝），我*************
+          <br><br>
+          ……………………………………………………………………………………………………
+          <br><br>
+          只是个咸鱼……………………………………………………………………………………
+        </td>
+      </tr>
+    </table>
+  </div>
+  <div><br><br><br><br>
+    <div>
+      <!-- 《懒得写css》 -->
+</body>
+
+</html>
