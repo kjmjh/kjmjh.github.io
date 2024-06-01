@@ -1,20 +1,8 @@
-/* styles.css */
-body{
-background:linear-gradient（-45deg,#ee7752,#e73c7e,#23a6d5,#23d5ab）；
-background-size:1000% 1000%;
-   animation:gradient 15s ease infinite；
-    @keyframes gradient{
-        0%{
-           background-position:0% 50%；
-           }
-          50%{
-            background-position:100% 50%
-            }
-           100%{
-                background-position:0% 50%;
-                }
-               }
-                a{
-                text-decoration:none；
-                 color:rgb(85,80,80)；
-                  }
+body {
+  margin: 0; /* 去除页面默认的外边距 */
+  padding: 0; /* 去除页面默认的内边距 */
+  background-image: url(&#39;背景图片的URL&#39;); /* 设置背景图的URL */
+  background-size: cover; /* 背景图覆盖整个页面 */
+  background-position: center; /* 背景图居中显示 */
+  background-repeat: no-repeat; /* 背景图不重复 */
+}
