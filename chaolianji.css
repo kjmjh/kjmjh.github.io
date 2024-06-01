@@ -1,6 +1,6 @@
 a { /*默认的超链接样式*/
     text-decoration: none;
-    color: #70c4f1;
+    color: #800080;
     transition: all 100ms;
 }
 a:hover{ /*鼠标悬浮在上面时的超链接的样式*/
