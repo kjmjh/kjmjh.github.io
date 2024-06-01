@@ -1,0 +1,13 @@
+a { /*默认的超链接样式*/
+    text-decoration: none;
+    color: #70c4f1;
+    transition: all 100ms;
+}
+a:hover{ /*鼠标悬浮在上面时的超链接的样式*/
+    color: #54b3e5;
+    transition: all 100ms;
+}
+a:active{ /*获取到焦点时的超链接的样式*/
+    color: #36a4e0;
+    transition: all 100ms;
+}
