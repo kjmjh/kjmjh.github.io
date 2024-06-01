@@ -35,7 +35,31 @@
         document.body.onload=()=>{ document.getElementById('loadback').style.opacity=0;setTimeout(()=>{document.getElementById('loadback').style.display='none';},3000); clearInterval(bcci)};</script>
     </div>
 
-<body style="background:url(https://img2.baidu.com/it/u=1873925721,383727792&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500); background-repeat:no-repeat;">
+<style type="text/css">
+        body{
+            background-image: url(https://img2.baidu.com/it/u=1873925721,383727792&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500);
+/*background-repeat属性定义了图像的平铺模式*/
+ 
+/* background-repeat: repeat; */
+/*默认值，背景图像将在垂直方向和水平方向重复,即全屏平铺*/
+ 
+            background-repeat: no-repeat;
+/*这个时候就会不重复平铺*/
+ 
+            background-repeat: repeat-y;
+/*背景图像将在垂直方向重复。*/
+ 
+            background-repeat: repeat-x;
+/*背景图像将在水平方向重复。*/
+ 
+            /* background-size:100%; */
+/* 指定背景图片大小 */
+ 
+background-attachment: fixed;
+/* 设置背景图像是否固定或者随着页面的其余部分滚动。 */
+        }
+    </style>
+</head>
 
 <div style="text-align:center">
  <h1 style="font-family:宋体;color:white">hi!</h1>
