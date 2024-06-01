@@ -1,4 +1,7 @@
-body {
-   background-color: #c670ca;
-   background-image: linear-gradient(45deg, #c670ca 0%, #25a5c8 52%, #20e275 90%);
-}
+.mobile-banner{
+        width: 100%;
+        background:url("https://img2.baidu.com/it/u=1873925721,383727792&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500") center center no-repeat;
+        background-size: cover;
+        padding-top: width/height%;
+        height: 0;
+    }
