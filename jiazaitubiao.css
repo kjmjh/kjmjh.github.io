@@ -4,7 +4,7 @@
   }
   body{
      height:100vh;
-     background:linear-gradient{to bottom,#2b6876,#09203f};
+     background:linear-gradient[to bottom,#2b6876,#09203f];
      display:flex;
      justify-content:center;
      align-items:center;
