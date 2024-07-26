@@ -71,7 +71,7 @@ body,
 }
 
 .navbar input:checked~ul {
-    width: 350px; /* 设置展开后的宽度 */
+    width: 380px; /* 设置展开后的宽度 */
 }
 
 .navbar input:checked~span:nth-child(2) {
