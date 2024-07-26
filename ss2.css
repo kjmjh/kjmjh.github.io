@@ -5,7 +5,7 @@
 
 body {
     height: 100vh; /* 设置body高度为视口高度 */
-    background: linear-gradient(200deg, #888, #888); /* 设置背景为线性渐变色 */
+    background: linear-gradient(200deg, white, white); /* 设置背景为线性渐变色 */
 }
 
 body,
