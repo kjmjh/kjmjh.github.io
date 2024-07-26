@@ -21,6 +21,7 @@ body,
     padding: 15px; /* 设置内边距 */
     background-color: #fff; /* 设置背景颜色 */
     border-radius: 50px; /* 设置圆角 */
+    box-shadow: 2px 2px 2px 2px #c5c7c4;
 }
 
 .navbar input {
