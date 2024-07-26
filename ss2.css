@@ -18,7 +18,7 @@ body,
 
 .navbar {
     position: relative; /* 相对定位 */
-    padding: 20px; /* 设置内边距 */
+    padding: 15px; /* 设置内边距 */
     background-color: #fff; /* 设置背景颜色 */
     border-radius: 50px; /* 设置圆角 */
 }
