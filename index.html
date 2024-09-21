@@ -42,5 +42,22 @@ border-radius:7px;
 <CENTER><div><a href="https://kjmjh.github.io/kj">kj23</a></div></CENTER>
 <CENTER><div><a href="https://kjmjh.github.io/MJH/3dmf.html">魔方游戏</a></div></CENTER>
 <CENTER><div><a href="https://kjmjh.github.io/pl.html">评论</a></div></CENTER>
+<script>
+        // 模拟检查页面是否存在
+        function checkPageExists() {
+            // 这里只是一个示例，实际应用中你需要根据实际情况来判断页面是否存在
+            const pageExists = false; // 假设页面不存在
+
+            if (!pageExists) {
+                // 页面不存在，重定向到404页面
+                window.location.href = "http://yourdomain.com/404.html";
+            }
+        }
+
+        // 页面加载完成后立即执行检查
+        document.addEventListener("DOMContentLoaded", checkPageExists);
+    </script>
+</body>
+</html>
 </body>
 </html>
