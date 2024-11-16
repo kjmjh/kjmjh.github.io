@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>密码验证</title>
+    <title>？？!!</title>
     <style>
         body {
             display: flex;
@@ -41,7 +41,7 @@
 
 <div class="container">
     <input type="password" id="password" placeholder="请输入密码" />
-    <button onclick="checkPassword()">进入</button>
+    <button onclick="checkPassword()">显示</button>
     <div id="nextPage">
         <p>面对人生时，你会选择什么呢？</p>
     </div>
@@ -58,6 +58,14 @@
             alert("密码错误，请重新输入！");
         }
     }
+       document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+    });
+       document.onkeydown = function(e) {
+        if (e.keyCode == 123) {  // F12 key
+            return false;
+        }
+    };
 </script>
 
 </body>
