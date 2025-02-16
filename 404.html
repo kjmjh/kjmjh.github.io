@@ -1,12 +1,141 @@
 <!DOCTYPE html>
 <html lang="zh">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>404</title>
-    </head>
-    <body>
-          <h1 style="text-align:center">404</h1>
-          <div style="text-align:center">您要找的页面不存在</div>
-    </body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 页面未找到</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            font-family: 'Arial', sans-serif;
+            color: #fff;
+            text-align: center;
+            background: linear-gradient(135deg, #6a0dad, #00bfff);
+            animation: backgroundAnimation 10s ease infinite;
+        }
+
+        .container {
+            animation: fadeIn 1s ease-in-out;
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 {
+            font-size: 100px;
+            margin: 0;
+            animation: bounce 1.5s infinite;
+        }
+
+        p {
+            font-size: 24px;
+            margin: 10px 0;
+        }
+
+        a {
+            text-decoration: none;
+            color: #fff;
+            background-color: #333;
+            padding: 10px 20px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        a:hover {
+            background-color: #555;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-30px);
+            }
+            60% {
+                transform: translateY(-15px);
+            }
+        }
+
+        @keyframes backgroundAnimation {
+            0% {
+                background: linear-gradient(135deg, #6a0dad, #00bfff);
+            }
+            50% {
+                background: linear-gradient(135deg, #00bfff, #6a0dad);
+            }
+            100% {
+                background: linear-gradient(135deg, #6a0dad, #00bfff);
+            }
+        }
+
+        .firework {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>404</h1>
+        <p>抱歉，页面未找到！</p>
+        <a href="https://kjmjh.github.io">返回主页</a>
+    </div>
+
+    <script>
+        document.body.addEventListener('click', function(e) {
+            const particles = 30; // 烟花粒子数量
+            for (let i = 0; i < particles; i++) {
+                createFirework(e.clientX, e.clientY);
+            }
+        });
+
+        function createFirework(x, y) {
+            const firework = document.createElement('div');
+            firework.classList.add('firework');
+            document.body.appendChild(firework);
+
+            const size = Math.random() * 10 + 5; // 粒子大小
+            firework.style.width = `${size}px`;
+            firework.style.height = `${size}px`;
+            firework.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`; // 随机颜色
+            firework.style.left = `${x}px`;
+            firework.style.top = `${y}px`;
+            firework.style.position = 'absolute';
+
+            const angle = Math.random() * 2 * Math.PI; // 随机角度
+            const distance = Math.random() * 100; // 随机距离
+            const duration = Math.random() * 0.5 + 0.5; // 随机持续时间
+
+            firework.animate([
+                { transform: `translate(0, 0)`, opacity: 1 },
+                { transform: `translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px)`, opacity: 0 }
+            ], {
+                duration: duration * 1000,
+                easing: 'ease-out',
+                fill: 'forwards'
+            });
+
+            firework.addEventListener('finish', () => {
+                firework.remove();
+            });
+        }
+    </script>
+</body>
 </html>
