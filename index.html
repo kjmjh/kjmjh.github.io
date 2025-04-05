@@ -2,121 +2,146 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>kj23和mjh的小站</title>
-    <link rel="shortcut icon" href="data:image/x-icon;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEgAACxIB0t1+/AAAADl0RVh0U29mdHdhcmUAbWF0cGxvdGxpYiB2ZXJzaW9uIDMuMC4wLCBodHRwOi8vbWF0cGxvdGxpYi5vcmcvZW4uY29tL3dlYmNvbG9yVHlwZS8xLjAuMTAxIFN5c3RlbSBDb2RlclN5c3RlbSAtIFVTQyAtIGh0dHA6Ly93d3cubWF0cGxvdGxpYi5vcmcvd2ViY29sb3JUeXBlLzEuMC4xMDEgLSBNb3ppbGxhLzUuMC4wLCBWZXJzaW9uPTEuMC4wLCBTYW5zLXNlcmlmU3RyZWFtPTEuMC4wLCBPcGVuU1RyaW5nVmFsdWU9MC4wLjA7IGh0dHA6Ly9tYXRwbG90bGliLm9yZy9XZWJDb2xvclR5cGUvMS4wLjEwMSAtIGh0dHA6Ly9tYXRwbG90bGliLm9yZy9XZWJDb2xvclR5cGUvMS4wLjEwMSAtIE1vemlsbGEvNS4wLjAsIFdlYiBDb2xvclR5cGUgMS4wLjEwMSAtIGh0dHA6Ly93d3cubWF0cGxvdGxpYi5vcmcvd2ViY29sb3JUeXBlLzEuMC4xMDEgLSBXaW5kb3dzIEVuZCBQaXhlbCAtIE1vemlsbGEvNS4wLjAsIFdlYiBDb2xvclR5cGUgMS4wLjEwMSAtIGh0dHA6Ly93d3cubWF0cGxvdGxpYi5vcmcvd2ViY29sb3JUeXBlLzEuMC4xMDEgLSBTYW5zLXNlcmlmU3RyZWFtPTEuMC4w" type="image/x-icon">
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            background: linear-gradient(135deg, #1f4037, #99f2c8);
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: white;
-            animation: fadeIn 2s ease-in-out;
-        }
+    <title>AI 对话网站</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&display=swap');
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: #050801;
+    font-family: 'Raleway', sans-serif;
+    font-weight: bold;
+}
+a{
+    position: relative;
+    display: inline-block;
+    padding: 25px 30px;
+    margin: 40px 0;
+    color: #03e9f4;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: 0.5s;
+    letter-spacing: 4px;
+    overflow: hidden;
+    margin-right: 50px;
+   
+}
+a:hover{
+    background: #03e9f4;
+    color: #050801;
+    box-shadow: 0 0 5px #03e9f4,
+                0 0 25px #03e9f4,
+                0 0 50px #03e9f4,
+                0 0 200px #03e9f4;
+     -webkit-box-reflect:below 1px linear-gradient(transparent, #0005);
+}
+a:nth-child(1){
+    filter: hue-rotate(270deg);
+}
+a:nth-child(2){
+    filter: hue-rotate(110deg);
+}
+a span{
+    position: absolute;
+    display: block;
+}
+a span:nth-child(1){
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg,transparent,#03e9f4);
+    animation: animate1 1s linear infinite;
+}
+@keyframes animate1{
+    0%{
+        left: -100%;
+    }
+    50%,100%{
+        left: 100%;
+    }
+}
+a span:nth-child(2){
+    top: -100%;
+    right: 0;
+    width: 2px;
+    height: 100%;
+    background: linear-gradient(180deg,transparent,#03e9f4);
+    animation: animate2 1s linear infinite;
+    animation-delay: 0.25s;
+}
+@keyframes animate2{
+    0%{
+        top: -100%;
+    }
+    50%,100%{
+        top: 100%;
+    }
+}
+a span:nth-child(3){
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(270deg,transparent,#03e9f4);
+    animation: animate3 1s linear infinite;
+    animation-delay: 0.50s;
+}
+@keyframes animate3{
+    0%{
+        right: -100%;
+    }
+    50%,100%{
+        right: 100%;
+    }
+}
 
-        .container {
-            text-align: center;
-            animation: slideIn 2s ease-in-out;
-        }
 
-        .link-container {
-            margin: 20px 0;
-        }
-
-        a {
-            display: inline-block;
-            font-weight: bold;
-            font-size: 18px;
-            color: white;
-            background-color: rgba(255, 255, 255, 0.2);
-            padding: 15px 30px;
-            margin: 10px;
-            border-radius: 50px;
-            text-decoration: none;
-            transition: background-color 0.3s, transform 0.3s;
-        }
-
-        a:hover {
-            background-color: rgba(255, 255, 255, 0.4);
-            transform: scale(1.1);
-        }
-
-        .footer {
-            position: absolute;
-            bottom: 20px;
-            font-size: 14px;
-            opacity: 0.7;
-            animation: fadeInFooter 3s ease-in-out;
-        }
-
-        /* Loading Animation */
-        .loader {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #1f4037;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            animation: fadeOutLoader 2s ease-in-out forwards;
-            animation-delay: 3s;
-        }
-
-        .loader::after {
-            content: '';
-            width: 50px;
-            height: 50px;
-            border: 5px solid rgba(255, 255, 255, 0.5);
-            border-top-color: white;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        @keyframes fadeOutLoader {
-            to { opacity: 0; visibility: hidden; }
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        @keyframes slideIn {
-            from { transform: translateY(-50px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-
-        @keyframes fadeInFooter {
-            from { opacity: 0; }
-            to { opacity: 0.7; }
-        }
-    </style>
+a span:nth-child(4){
+    bottom: -100%;
+    left: 0;
+    width: 2px;
+    height: 100%;
+    background: linear-gradient(360deg,transparent,#03e9f4);
+    animation: animate4 1s linear infinite;
+    animation-delay: 0.75s;
+}
+@keyframes animate4{
+    0%{
+        bottom: -100%;
+    }
+    50%,100%{
+        bottom: 100%;
+    }
+}
+</style>
+<a href="https://kjmjh.github.io/kj">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        kj23
+    </a>
+    <a href="https://kjmjh.github.io/dbai.html">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        ai对话
+    </a>
+    <a href="https://kjmjh.github.io">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        主 页
+    </a>
 </head>
-<body>
-    <div class="loader"></div>
-    <div class="container">
-        <p style="font-size: 7vh; margin-bottom: 30px;">幸会👋<br/>欢迎来到这个糟糕的主页<br/>这个主页由kj23一人制作<br/>邮箱: <a href="mailto:kj23awa@outlook.com" style="color: white; text-decoration: underline;">kj23awa@outlook.com</a></p>
-        <div class="link-container">
-            <a href="https://kjmjh.github.io/dbai.html">盗版AI</a>
-            <a href="https://kjmjh.github.io/kj">KJ23</a>
-        </div>
-        <p style="font-size: 7vh; margin-top: 30px;">我是不是该把这个破玩意儿改一下了？</p>
-    </div>
-    <div class="footer">
-        --.../...../-----/---../----./-..../-..../----./---..
-    </div>
-</body>
 </html>
