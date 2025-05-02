@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI对话网站(2)</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #6e7dff, #00c6ff);
+            margin: 0;
+            padding: 20px;
+            color: #fff;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 2.5em;
+            text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.3);
+        }
+        #chat {
+            border-radius: 10px;
+            padding: 10px;
+            height: 400px;
+            overflow-y: scroll;
+            background-color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .message {
+            margin: 10px 0;
+            padding: 10px 15px;
+            border-radius: 20px;
+            max-width: 70%;
+            word-wrap: break-word;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .user-message {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            margin-left: auto;
+            text-align: right;
+        }
+        .ai-message {
+            background-color: #c3e6cb;
+            color: #155724;
+            margin-right: auto;
+            text-align: left;
+        }
+        .thinking {
+            font-style: italic;
+            color: #6c757d;
+            margin-right: auto;
+            text-align: left;
+        }
+        input[type="text"] {
+            width: calc(100% - 100px);
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            margin-right: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            background-color: #28a745;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        button:hover {
+            background-color: #218838;
+            transform: translateY(-2px);
+        }
+        button:active {
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+
+<h1>AI对话网站2</h1>
+<div id="chat"></div>
+<div style="display: flex; justify-content: center;">
+    <input type="text" id="userInput" placeholder="输入你的消息..." />
+    <button id="sendButton">发送</button>
+</div>
+
+<script>
+    document.getElementById("sendButton").onclick = function() {
+        const userInput = document.getElementById("userInput").value;
+        if (userInput.trim() === "") return;
+
+        // 显示用户消息
+        const chatDiv = document.getElementById("chat");
+        chatDiv.innerHTML += `<div class="message user-message">你: ${userInput}</div>`;
+        document.getElementById("userInput").value = ""; // 清空输入框
+
+        // 显示 AI 正在思考的提示
+        const thinkingMessage = document.createElement('div');
+        thinkingMessage.className = 'message thinking';
+        thinkingMessage.innerText = 'AI正在思考...';
+        chatDiv.appendChild(thinkingMessage);
+        chatDiv.scrollTop = chatDiv.scrollHeight; // 滚动到最新消息
+
+        // 发送请求到API
+        fetch(`https://api.52vmy.cn/api/chat/spark?msg=${encodeURIComponent(userInput)}`)
+            .then(response => response.json())
+            .then(data => {
+                // 提取 AI 的回复
+                const aiMessage = data.data && data.data.answer ? data.data.answer : "抱歉，由于限制，请稍后再试";
+                
+                // 移除“AI正在思考”的提示
+                chatDiv.removeChild(thinkingMessage);
+
+                // 创建一个新的消息框用于 AI 回复
+                const aiMessageDiv = document.createElement('div');
+                aiMessageDiv.className = 'message ai-message';
+                chatDiv.appendChild(aiMessageDiv);
+                chatDiv.scrollTop = chatDiv.scrollHeight; // 滚动到最新消息
+
+                // 模拟打字动画
+                let index = 0;
+                const typingEffect = setInterval(() => {
+                    if (index < aiMessage.length) {
+                        aiMessageDiv.innerText = `AI: ${aiMessage.substring(0, index + 1)}`;
+                        chatDiv.scrollTop = chatDiv.scrollHeight; // 滚动到最新消息
+                        index++;
+                    } else {
+                        clearInterval(typingEffect);
+                    }
+                }, 10); // 每10毫秒打一个字
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                chatDiv.removeChild(thinkingMessage);
+                chatDiv.innerHTML += `<div class="message ai-message">出现错误，请稍后再试。</div>`;
+                chatDiv.scrollTop = chatDiv.scrollHeight; // 滚动到最新消息
+            });
+    };
+</script>
+
+</body>
+</html>
