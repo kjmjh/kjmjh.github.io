@@ -3,109 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI绘画生成器</title>
+    <title>AI绘画网站</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            text-align: center;
+            margin: 0;
+            padding: 50px;
+            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+            height: 100vh;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-
-        .container {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
         input {
-            margin: 10px 0;
+            width: 300px;
             padding: 10px;
-            width: 100%;
+            margin: 10px;
+            border: 2px solid #007BFF;
+            border-radius: 5px;
+            font-size: 16px;
         }
 
         button {
-            padding: 10px;
-            background-color: #28a745;
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: #007BFF;
             color: white;
             border: none;
             border-radius: 5px;
-            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s, transform 0.2s;
         }
 
         button:hover {
-            background-color: #218838;
+            background-color: #0056b3;
+            transform: scale(1.05);
         }
 
-        #output {
+        img {
             margin-top: 20px;
-            font-size: 1.2em;
-        }
-        
-        .images {
-            margin-top: 20px;
-            display: flex;
-            flex-wrap: wrap;
+            max-width: 100%;
+            height: auto;
         }
 
-        .images img {
-            margin: 10px;
-            max-width: 200px;
-            border-radius: 5px;
+        #loadingMessage {
+            font-size: 18px;
+            color: orange;
+            margin-top: 10px;
+        }
+
+        #message {
+            margin-top: 10px;
+            font-size: 16px;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>AI绘画生成器</h1>
-        <input type="text" id="description" placeholder="输入绘画内容" required>
-        <button id="submit">生成绘画</button>
-        <div id="output"></div>
-        <div id="images" class="images"></div>
+
+    <h1>AI绘画生成器</h1>
+    <input type="text" id="prompt" placeholder="请输入提示词，例如：cat">
+    <button id="generateBtn">生成图像</button>
+
+    <div id="result">
+        <h2>生成的图像：</h2>
+        <img id="generatedImg" src="" alt="生成的图像将显示在这里">
+        <p id="message"></p>
+        <p id="loadingMessage" style="display: none;">AI正在绘画...完成后需要一点时间来展示</p>
     </div>
+
     <script>
-        document.getElementById('submit').addEventListener('click', async () => {
-            const description = document.getElementById('description').value;
-            document.getElementById('output').innerText = '您输入的描述是: ' + description;
+        document.getElementById('generateBtn').addEventListener('click', function() {
+            const prompt = document.getElementById('prompt').value;
+            const apiUrl = `https://api.pearktrue.cn/api/stablediffusion/?prompt=${encodeURIComponent(prompt)}&model=normal`;
 
-            // 发送请求到API，num参数设置为1
-            const url = `https://di.logarh.xyz/Api/dbaiff.php?description=${encodeURIComponent(description)}&num=1`;
+            // 显示“AI正在绘画”消息
+            document.getElementById('loadingMessage').style.display = 'block';
+            document.getElementById('generatedImg').src = ''; // 清空之前的图像
+            document.getElementById('message').textContent = ''; // 清空之前的消息
 
-            try {
-                const response = await fetch(url);
-                
-                if (!response.ok) {
-                    throw new Error('网络响应不是 OK');
-                }
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    // 隐藏“AI正在绘画”消息
+                    document.getElementById('loadingMessage').style.display = 'none';
 
-                const data = await response.json();
-
-                if (data.code === 200 && Array.isArray(data.image_url)) {
-                    displayImages(data.image_url);
-                } else {
-                    document.getElementById('output').innerText = '生成失败: ' + (data.msg || '未知错误');
-                }
-            } catch (error) {
-                console.error('请求错误:', error);
-                document.getElementById('output').innerText = '请求错误，请稍后再试。';
-            }
+                    if (data.code === 200) {
+                        document.getElementById('generatedImg').src = data.imgurl;
+                        document.getElementById('message').textContent = data.msg;
+                    } else {
+                        document.getElementById('message').textContent = "生成图像失败，请重试。";
+                    }
+                })
+                .catch(error => {
+                    // 隐藏“AI正在绘画”消息
+                    document.getElementById('loadingMessage').style.display = 'none';
+                    console.error('Error:', error);
+                    document.getElementById('message').textContent = "发生错误，请稍后再试。";
+                });
         });
-
-        function displayImages(imageUrls) {
-            const imagesDiv = document.getElementById('images');
-            imagesDiv.innerHTML = ''; // 清空之前的图片
-
-            // 提取并显示image_url字段中的图片
-            imageUrls.forEach(url => {
-                const img = document.createElement('img');
-                img.src = url;
-                imagesDiv.appendChild(img);
-            });
-        }
     </script>
+
 </body>
 </html>
