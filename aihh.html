@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI绘画生成器</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        input {
+            margin: 10px 0;
+            padding: 10px;
+            width: 100%;
+        }
+
+        button {
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        #output {
+            margin-top: 20px;
+            font-size: 1.2em;
+        }
+        
+        .images {
+            margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .images img {
+            margin: 10px;
+            max-width: 200px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>AI绘画生成器</h1>
+        <input type="text" id="description" placeholder="输入绘画内容" required>
+        <button id="submit">生成绘画</button>
+        <div id="output"></div>
+        <div id="images" class="images"></div>
+    </div>
+    <script>
+        document.getElementById('submit').addEventListener('click', async () => {
+            const description = document.getElementById('description').value;
+            document.getElementById('output').innerText = '您输入的描述是: ' + description;
+
+            // 发送请求到API，num参数设置为1
+            const url = `http://di.logarh.xyz/Api/dbaiff.php?description=${encodeURIComponent(description)}&num=1`;
+
+            try {
+                const response = await fetch(url);
+                
+                if (!response.ok) {
+                    throw new Error('网络响应不是 OK');
+                }
+
+                const data = await response.json();
+
+                if (data.code === 200 && Array.isArray(data.image_url)) {
+                    displayImages(data.image_url);
+                } else {
+                    document.getElementById('output').innerText = '生成失败: ' + (data.msg || '未知错误');
+                }
+            } catch (error) {
+                console.error('请求错误:', error);
+                document.getElementById('output').innerText = '请求错误，请稍后再试。';
+            }
+        });
+
+        function displayImages(imageUrls) {
+            const imagesDiv = document.getElementById('images');
+            imagesDiv.innerHTML = ''; // 清空之前的图片
+
+            // 提取并显示image_url字段中的图片
+            imageUrls.forEach(url => {
+                const img = document.createElement('img');
+                img.src = url;
+                imagesDiv.appendChild(img);
+            });
+        }
+    </script>
+</body>
+</html>
