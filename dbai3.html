@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI对话网站3</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        #modelSelect {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        #chat {
+            border: 1px solid #ccc;
+            padding: 10px;
+            height: 300px;
+            overflow-y: scroll;
+            background-color: #fff;
+            border-radius: 4px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 10px;
+        }
+        #userInput {
+            width: 75%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-right: 5px;
+        }
+        #sendButton {
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        #sendButton:hover {
+            background-color: #0056b3;
+        }
+        .message {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: flex-start;
+        }
+        .user {
+            color: #007bff;
+            font-weight: bold;
+            margin-left: auto; /* 用户消息右对齐 */
+            text-align: right;
+        }
+        .ai {
+            color: #28a745;
+            font-weight: bold;
+            text-align: left;
+        }
+        .thinking {
+            color: #ff9900;
+            font-weight: bold;
+        }
+        .chatBubble {
+            padding: 10px;
+            border-radius: 15px;
+            max-width: 70%;
+            margin: 5px;
+            word-wrap: break-word;
+        }
+        .userBubble {
+            background-color: #e7f1ff;
+            border: 1px solid #007bff;
+            align-self: flex-end; /* 用户消息右对齐 */
+        }
+        .aiBubble {
+            background-color: #d4edda;
+            border: 1px solid #28a745;
+        }
+    </style>
+</head>
+<body>
+
+<h1>AI对话网站3</h1>
+
+<label for="modelSelect">AI模型:</label>
+<select id="modelSelect">
+    <option value="deepseek-v3">deepseek-v3</option>
+    <option value="deepseek-r1">deepseek-r1</option>
+    <option value="qwen3-235b-a22b">qwen3-235b-a22b</option>
+    <option value="qwen3-235b-a22b-think">qwen3-235b-a22b-think</option>
+    <option value="qwen3-235b-a22b-online">qwen3-235b-a22b-online</option>
+    <option value="qwen3-30b-a3b">qwen3-30b-a3b</option>
+    <option value="qwen3-30b-a3b-think">qwen3-30b-a3b-think</option>
+    <option value="qwen3-30b-a3b-online">qwen3-30b-a3b-online</option>
+    <option value="qwq-32b">qwq-32b</option>
+    <option value="qwq-32b-online">qwq-32b-online</option>
+    <option value="qwen-max">qwen-max</option>
+    <option value="qwen-max-online">qwen-max-online</option>
+    <option value="qwen-plus">qwen-plus</option>
+    <option value="qwen-plus-online">qwen-plus-online</option>
+    <option value="qwen-turbo">qwen-turbo</option>
+    <option value="qwen-turbo-online">qwen-turbo-online</option>
+    <option value="mistral-small">mistral-small</option>
+</select>
+
+<div id="chat"></div>
+<input type="text" id="userInput" placeholder="请输入你的消息...">
+<button id="sendButton">发送</button>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/2.1.3/marked.min.js"></script>
+<script>
+    const chatDiv = document.getElementById('chat');
+    const userInput = document.getElementById('userInput');
+    const sendButton = document.getElementById('sendButton');
+    const modelSelect = document.getElementById('modelSelect');
+    let thinkingMessageDiv;
+
+    sendButton.addEventListener('click', async () => {
+        const userMessage = userInput.value;
+        const selectedModel = modelSelect.value;
+        if (!userMessage) return;
+
+        // 显示用户消息
+        chatDiv.innerHTML += `<div class="message"><span class="user">你:</span> <div class="chatBubble userBubble">${marked(userMessage)}</div></div>`;
+        userInput.value = '';
+
+        // 显示AI正在思考中的消息
+        thinkingMessageDiv = document.createElement('div');
+        thinkingMessageDiv.className = 'message';
+        thinkingMessageDiv.innerHTML = `<span class="ai thinking">AI正在思考中...</span>`;
+        chatDiv.appendChild(thinkingMessageDiv);
+        chatDiv.scrollTop = chatDiv.scrollHeight;
+
+        // 调用API
+        const response = await fetch('https://api.pearktrue.cn/api/aichat/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                model: selectedModel,
+                messages: [{ role: "user", content: userMessage }],
+                stream: false
+            })
+        });
+
+        const data = await response.json();
+        if (data.code === 200) {
+            const aiResponse = data.content; // 获取原始响应
+            // 删除“AI正在思考中”的消息
+            thinkingMessageDiv.remove();
+            // 打字效果
+            typeWriter(marked(aiResponse)); // 解析Markdown并传递给打字效果
+        } else {
+            // 删除“AI正在思考中”的消息
+            thinkingMessageDiv.remove();
+            chatDiv.innerHTML += `<div class="message"><span class="ai">AI:</span> <div class="chatBubble aiBubble">出现错误: ${data.msg}</div></div>`;
+        }
+
+        // 滚动到聊天底部
+        chatDiv.scrollTop = chatDiv.scrollHeight;
+    });
+
+    function typeWriter(text) {
+        const aiMessageDiv = document.createElement('div');
+        aiMessageDiv.className = 'message';
+        aiMessageDiv.innerHTML = `<span class="ai">AI:</span> <div class="chatBubble aiBubble"></div>`;
+        chatDiv.appendChild(aiMessageDiv);
+
+        let i = 0;
+        const typingSpeed = 10; // 每个字符的间隔时间，单位为毫秒
+
+        function type() {
+            if (i < text.length) {
+                aiMessageDiv.querySelector('.chatBubble').innerHTML += text.charAt(i);
+                i++;
+                setTimeout(type, typingSpeed);
+                chatDiv.scrollTop = chatDiv.scrollHeight; // 保持滚动到底部
+            }
+        }
+
+        type();
+    }
+</script>
+
+</body>
+</html>
