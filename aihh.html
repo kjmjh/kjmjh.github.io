@@ -73,7 +73,7 @@
             document.getElementById('output').innerText = '您输入的描述是: ' + description;
 
             // 发送请求到API，num参数设置为1
-            const url = `http://di.logarh.xyz/Api/dbaiff.php?description=${encodeURIComponent(description)}&num=1`;
+            const url = `https://di.logarh.xyz/Api/dbaiff.php?description=${encodeURIComponent(description)}&num=1`;
 
             try {
                 const response = await fetch(url);
