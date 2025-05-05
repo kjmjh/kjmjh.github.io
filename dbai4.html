@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI对话网站4</title>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .chatbox {
+            height: 500px;
+            overflow-y: auto;
+            border: 1px solid #e0e0e0;
+            padding: 15px;
+            margin-bottom: 15px;
+            background-color: #fdfdfd;
+            border-radius: 8px;
+            line-height: 1.6;
+        }
+
+        .chatbox div { /* This targets .user, .assistant, .reasoning wrappers */
+            margin-bottom: 12px;
+            max-width: 95%; /* Allow slightly more width */
+            word-wrap: break-word;
+        }
+
+        /* General message bubble style */
+        .message {
+            padding: 10px 15px;
+            border-radius: 18px;
+            display: inline-block;
+            max-width: calc(100% - 30px); /* Ensure padding is accounted for */
+            text-align: left; /* Default text alignment */
+        }
+
+        /* User message specific styles */
+         .user {
+            display: flex; /* Use flex to push message to the right */
+            justify-content: flex-end;
+            margin-left: auto; /* Ensure wrapper takes available space */
+         }
+        .user .message {
+            background-color: #007bff;
+            color: white;
+            border-bottom-right-radius: 5px;
+        }
+
+        /* Assistant message specific styles */
+        .assistant {
+             display: flex;
+             justify-content: flex-start;
+             margin-right: auto;
+        }
+        .assistant .message {
+            background-color: #e9e9eb;
+            color: #333;
+            border-bottom-left-radius: 5px;
+            /* Markdown Styles within assistant message */
+        }
+        .assistant .message pre {
+            background-color: #f0f0f0;
+            padding: 12px; /* More padding for code blocks */
+            border-radius: 6px;
+            overflow-x: auto;
+            border: 1px solid #ddd;
+            font-size: 0.9em; /* Slightly smaller font for code */
+            line-height: 1.4; /* Adjust line height for code */
+            margin: 0.8em 0; /* Add vertical margin */
+        }
+         .assistant .message code:not(pre code) {
+             background-color: #f0f0f0;
+             padding: 0.2em 0.4em;
+             border-radius: 3px;
+             font-size: 0.9em;
+             border: 1px solid #e0e0e0; /* Subtle border for inline code */
+         }
+        .assistant .message ul, .assistant .message ol {
+            padding-left: 25px; /* More indentation for lists */
+            margin: 0.5em 0;
+        }
+         .assistant .message li {
+            margin-bottom: 0.3em; /* Space between list items */
+        }
+        .assistant .message blockquote {
+            border-left: 4px solid #ccc;
+            padding-left: 15px; /* More padding for blockquote */
+            margin-left: 0;
+            color: #555; /* Darker quote text */
+            margin: 0.8em 0;
+        }
+        .assistant .message table {
+             border-collapse: collapse;
+             width: auto;
+             max-width: 100%; /* Prevent table overflow */
+             margin: 1em 0;
+             border: 1px solid #ccc;
+             font-size: 0.95em; /* Slightly smaller table font */
+         }
+         .assistant .message th, .assistant .message td {
+             border: 1px solid #ccc;
+             padding: 8px 10px; /* Adjust padding */
+             text-align: left;
+         }
+         .assistant .message th {
+             background-color: #f2f2f2;
+             font-weight: 600; /* Bolder headers */
+         }
+        .assistant .message hr { /* Style horizontal rules */
+            border: none;
+            border-top: 1px solid #e0e0e0;
+            margin: 1em 0;
+        }
+        .assistant .message a { /* Style links */
+            color: #0056b3;
+            text-decoration: none;
+        }
+        .assistant .message a:hover {
+            text-decoration: underline;
+        }
+
+        /* Reasoning specific styles */
+        .reasoning {
+            font-size: 0.9em;
+            color: #555;
+            font-style: italic;
+            margin-top: 5px;
+            margin-bottom: 8px;
+            padding: 8px 12px;
+            padding-left: 25px;
+            background-color: #f0f0f0;
+            border-left: 3px solid #007bff;
+            border-radius: 4px;
+            max-width: 90%;
+            margin-right: auto; /* Keep aligned left */
+            word-wrap: break-word;
+            line-height: 1.5;
+            box-sizing: border-box; /* Include padding in width calculation */
+        }
+        .reasoning::before {
+            content: "深度思考: ";
+            font-weight: bold;
+            font-style: normal;
+            color: #333;
+        }
+
+        .loading {
+            color: gray;
+            font-style: italic;
+            text-align: center;
+            padding: 10px;
+        }
+
+        .input-area {
+            display: flex;
+            margin-top: 10px;
+            align-items: center; /* Vertically align items */
+        }
+
+        input[type="text"] {
+            flex-grow: 1;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            margin-right: 10px;
+            font-size: 1em;
+            line-height: 1.4; /* Improve input line height */
+        }
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+        }
+
+
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 18px;
+            cursor: pointer;
+            transition: background-color 0.3s, box-shadow 0.3s;
+            font-size: 1em;
+            white-space: nowrap;
+            line-height: 1.4; /* Match input line height */
+        }
+
+        button:hover {
+            background-color: #0056b3;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+        }
+         button:disabled { /* Style for disabled button */
+            background-color: #cccccc;
+            cursor: not-allowed;
+            box-shadow: none;
+         }
+
+
+        #newConversationButton {
+            background-color: #6c757d;
+            margin-left: 10px;
+        }
+         #newConversationButton:hover {
+             background-color: #5a6268;
+             box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+         }
+         #newConversationButton:disabled {
+             background-color: #cccccc;
+             cursor: not-allowed;
+             box-shadow: none;
+         }
+
+        select {
+            margin-bottom: 15px;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            width: 100%;
+            background-color: white;
+            font-size: 1em;
+            box-sizing: border-box; /* Include padding in width */
+             cursor: pointer;
+        }
+         select:focus {
+             outline: none;
+             border-color: #007bff;
+             box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+         }
+
+         label {
+             display: block;
+             margin-bottom: 5px;
+             font-weight: 500;
+             color: #555;
+         }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>AI 对话</h1>
+        <div>
+            <label for="modelSelect">选择 AI 模型:</label>
+            <select id="modelSelect">
+                <!-- *** ALL Models from the initial list *** -->
+                <option value="gpt-3.5-turbo-0125">gpt-3.5-turbo-0125</option>
+                <option value="gpt-4.1-mini">gpt-4.1-mini</option>
+                <option value="text-embedding-ada-002">text-embedding-ada-002</option>
+                <option value="gpt-4.1">gpt-4.1</option>
+                <option value="gpt-4.1-nano-2025-04-14">gpt-4.1-nano-2025-04-14</option>
+                <option value="gpt-4o-mini-2024-07-18-ca">gpt-4o-mini-2024-07-18-ca</option>
+                <option value="deepseek-v3">deepseek-v3</option>
+                <option value="text-embedding-3-small">text-embedding-3-small</option>
+                <option value="gpt-3.5-turbo-ca">gpt-3.5-turbo-ca</option>
+                <option value="deepseek-r1">deepseek-r1</option>
+                <option value="gpt-4o-2024-05-13">gpt-4o-2024-05-13</option>
+                <option value="gpt-4o">gpt-4o</option>
+                <option value="gpt-4o-mini-ca">gpt-4o-mini-ca</option>
+                <option value="gpt-4o-ca">gpt-4o-ca</option>
+                <option value="gpt-3.5-turbo">gpt-3.5-turbo</option>
+                <option value="gpt-4.1-mini-2025-04-14">gpt-4.1-mini-2025-04-14</option>
+                <option value="gpt-3.5-turbo-1106">gpt-3.5-turbo-1106</option>
+                <option value="gpt-4.1-nano">gpt-4.1-nano</option>
+                <option value="text-embedding-3-large">text-embedding-3-large</option>
+                <option value="gpt-4o-mini">gpt-4o-mini</option>
+                <!-- *** End of Model List *** -->
+            </select>
+        </div>
+        <div id="chatbox" class="chatbox"></div>
+        <div id="loadingIndicator" class="loading" style="display: none;">AI 正在思考中...</div>
+        <div class="input-area">
+            <input type="text" id="userInput" placeholder="请输入您的问题..." />
+            <button id="sendButton">发送</button>
+            <button id="newConversationButton">新对话</button>
+        </div>
+    </div>
+
+    <script>
+        const chatbox = document.getElementById('chatbox');
+        const userInput = document.getElementById('userInput');
+        const sendButton = document.getElementById('sendButton');
+        const newConversationButton = document.getElementById('newConversationButton');
+        const modelSelect = document.getElementById('modelSelect');
+        const loadingIndicator = document.getElementById('loadingIndicator');
+
+        
+        const apiURL = 'https://api.chatanywhere.tech/v1/chat/completions';
+     
+        const apiKey = 'sk-Mid2lZZLDlnqEAdFXrzOaEUFWYYysXgbU5gqtbeQPVWhtggv'; 
+
+        // 对话历史记录 
+        let conversationHistory = [];
+
+        // --- Functions ---
+
+        // 加载对话历史
+        function loadConversationHistory() {
+            const storedHistory = localStorage.getItem('conversationHistory');
+            if (storedHistory) {
+                try {
+                    conversationHistory = JSON.parse(storedHistory);
+                    chatbox.innerHTML = ''; // 清空现有内容
+                    conversationHistory.forEach(message => {
+                        // 从历史加载时不显示思考过程，也不滚动
+                        appendMessage(message.role, message.content, false, false);
+                    });
+                    // 延迟滚动到底部，确保所有元素渲染完成
+                    setTimeout(() => {
+                        chatbox.scrollTop = chatbox.scrollHeight;
+                    }, 0);
+                } catch (e) {
+                    console.error("无法解析本地存储中的对话历史:", e);
+                    localStorage.removeItem('conversationHistory'); // 清除损坏的数据
+                    conversationHistory = [];
+                    chatbox.innerHTML = '';
+                }
+            } else {
+                conversationHistory = [];
+                chatbox.innerHTML = ''; // 确保清空
+            }
+        }
+
+        // 保存对话历史
+        function saveConversationHistory() {
+            // 只保存核心对话内容，不保存思考过程
+             try {
+                localStorage.setItem('conversationHistory', JSON.stringify(conversationHistory));
+             } catch (e) {
+                 console.error("无法保存对话历史到本地存储:", e);
+                 // ｡:.ﾟヽ(*´∀`)ﾉﾟ.:｡
+             }
+        }
+
+       
+        function sanitizeHtml(htmlString) {
+             const tempDiv = document.createElement('div');
+             tempDiv.innerHTML = htmlString;
+             // 移除脚本、样式、链接和危险事件处理器
+             tempDiv.querySelectorAll('script, style, link, iframe, object, embed').forEach(el => el.remove());
+             tempDiv.querySelectorAll('*').forEach(el => {
+                for(let i = el.attributes.length - 1; i >= 0; i--) {
+                    const attrName = el.attributes[i].name.toLowerCase();
+                    if (attrName.startsWith('on') || (attrName === 'href' && el.attributes[i].value.trim().toLowerCase().startsWith('javascript:'))) {
+                        el.removeAttribute(attrName);
+                    }
+                    
+                }
+             });
+             return tempDiv.innerHTML;
+        }
+
+
+        
+        function appendMessage(role, content, shouldScroll = true, isReasoning = false) {
+            const messageWrapper = document.createElement('div');
+
+            if (isReasoning) {
+                 messageWrapper.className = 'reasoning'; // 应用思考过程样式
+              
+                 messageWrapper.textContent = content;
+                 // 如果思考过程也可能是 Markdown，则需要解析和清理:
+                 // const unsafeHtml = marked.parse(content || ''); // 处理 null 或 undefined
+                 // messageWrapper.innerHTML = sanitizeHtml(unsafeHtml);
+             } else {
+                 messageWrapper.className = role; // 'user' 或 'assistant'
+                 const messageDiv = document.createElement('div');
+                 messageDiv.className = 'message'; // 应用通用消息气泡样式
+
+                if (role === 'assistant') {
+                     const unsafeHtml = marked.parse(content || ''); // 处理 null 或 undefined
+                     messageDiv.innerHTML = sanitizeHtml(unsafeHtml); // 清理后插入
+                    // 应用代码高亮
+                    messageDiv.querySelectorAll('pre code').forEach((block) => {
+                        try {
+                           hljs.highlightElement(block);
+                        } catch (e) {
+                           console.error("Highlight.js error:", e);
+                        }
+                    });
+                } else {
+                    // 用户消息直接显示文本，防止 XSS
+                    messageDiv.textContent = content || ''; // 处理 null 或 undefined
+                }
+                messageWrapper.appendChild(messageDiv);
+             }
+
+            chatbox.appendChild(messageWrapper);
+
+            // 仅当需要滚动时才滚动
+            if (shouldScroll) {
+                // 使用 requestAnimationFrame 确保在 DOM 更新后滚动
+                requestAnimationFrame(() => {
+                    chatbox.scrollTop = chatbox.scrollHeight;
+                });
+            }
+        }
+
+
+        // 发送消息处理函数
+        async function handleSendMessage() {
+            const userMessage = userInput.value.trim();
+            if (!userMessage) return; // 不发送空消息
+
+            // 1. 立即显示用户消息并添加到历史记录
+            appendMessage('user', userMessage);
+            conversationHistory.push({ role: 'user', content: userMessage });
+            // userInput.value = '';
+
+            // 2. 禁用输入和按钮，显示加载状态
+            userInput.disabled = true;
+            sendButton.disabled = true;
+            newConversationButton.disabled = true; // 请求期间禁用新对话按钮
+            loadingIndicator.style.display = 'block';
+            chatbox.scrollTop = chatbox.scrollHeight; // 滚动到底部看加载提示
+
+            // 3. 准备发送到 API 的消息
+            const selectedModel = modelSelect.value;
+            // 检查选择的模型是否为 Embedding 模型，如果是，可能需要不同的处理或提示
+            if (selectedModel.toLowerCase().includes('embedding')) {
+                 appendMessage('assistant', `注意：您选择的是 Embedding 模型 (${selectedModel})，它主要用于文本向量化，可能无法进行常规对话。`, true, false);
+                 // 恢复 UI
+                 userInput.disabled = false;
+                 sendButton.disabled = false;
+                 newConversationButton.disabled = false;
+                 loadingIndicator.style.display = 'none';
+                 userInput.focus();
+                 return; // 阻止发送到 chat/completions endpoint
+             }
+
+            const messagesToSend = [
+                // System prompt 可以根据需要调整
+                { role: 'system', content: 'You are a helpful assistant. Please format your responses using Markdown.' },
+                 ...conversationHistory // 发送完整历史
+            ];
+
+            // --- API 请求 ---
+            try {
+                console.log("Sending request to API:", { model: selectedModel, messages: messagesToSend.length });
+                const response = await fetch(apiURL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${apiKey}` // 添加 Bearer 前缀
+                    },
+                    body: JSON.stringify({
+                        model: selectedModel,
+                        messages: messagesToSend,
+                        
+                    })
+                });
+
+                // 请求完成后先隐藏加载
+                loadingIndicator.style.display = 'none';
+
+                if (!response.ok) {
+                    // 尝试解析错误体
+                    let errorBody = null;
+                    try {
+                        errorBody = await response.json();
+                         console.error('API Error Response Body:', errorBody);
+                    } catch(e) {
+                         console.error('Could not parse error response body:', await response.text());
+                    }
+                    const errorMessage = errorBody?.error?.message || `HTTP error! status: ${response.status} ${response.statusText}`;
+                    throw new Error(errorMessage);
+                }
+
+                const data = await response.json();
+                console.log("Received response from API:", data);
+
+                if (data.choices && data.choices.length > 0 && data.choices[0].message) {
+                    const assistantMessage = data.choices[0].message;
+                    const assistantMessageContent = assistantMessage.content;
+                    const reasoningContent = assistantMessage.reasoning_content; // 假设字段名为 reasoning_content
+
+                    // --- 显示思考过程 ---
+                    if (reasoningContent) {
+                         appendMessage('assistant', reasoningContent, true, true); // isReasoning=true
+                    }
+
+                    // --- 显示 AI 的主要回复 ---
+                    if (assistantMessageContent) {
+                        appendMessage('assistant', assistantMessageContent); // isReasoning=false (default)
+                        // 成功收到回复后，将 AI 回复添加到历史
+                        conversationHistory.push({ role: 'assistant', content: assistantMessageContent });
+                        userInput.value = ''; // 清空输入框
+                    } else {
+                         // 如果 content 为空或 null
+                         appendMessage('assistant', '(AI 回复为空)');
+                         conversationHistory.push({ role: 'assistant', content: '' }); // 记录空回复
+                    }
+
+                    // 保存更新后的历史
+                    saveConversationHistory();
+
+                } else {
+                     console.error('API response missing expected content:', data);
+                     appendMessage('assistant', '抱歉，未能获取有效回复结构。');
+                     // 即使回复结构错误，也保存用户输入历史
+                     saveConversationHistory();
+                }
+
+            } catch (error) {
+                console.error('API 请求或处理失败:', error);
+                loadingIndicator.style.display = 'none'; // 确保隐藏加载
+                // 显示错误消息给用户
+                appendMessage('assistant', `请求失败: ${error.message || '未知错误'}`);
+                // 不保存这次失败的 AI 回复，但用户输入已在之前添加
+                // saveConversationHistory(); // 可以在这里再保存一次，确保用户输入被记录
+            } finally {
+                 // 无论成功或失败，恢复 UI 状态
+                 userInput.disabled = false;
+                 sendButton.disabled = false;
+                 newConversationButton.disabled = false;
+                 userInput.focus(); // 将焦点移回输入框
+            }
+        } // --- End of handleSendMessage ---
+
+        // --- Event Listeners ---
+
+        // 发送按钮点击事件
+        sendButton.addEventListener('click', handleSendMessage);
+
+        // 输入框回车事件 (Enter 发送, Shift+Enter 换行)
+        userInput.addEventListener('keypress', (event) => {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault(); // 阻止默认的回车换行
+                handleSendMessage();
+            }
+        });
+
+        // 新对话按钮点击事件
+        newConversationButton.addEventListener('click', () => {
+            if (confirm("确定要开始新的对话吗？当前对话记录将被清除。")) {
+                conversationHistory = []; // 清空内存中的历史记录
+                localStorage.removeItem('conversationHistory'); // 清除本地存储
+                chatbox.innerHTML = ''; // 清空聊天框显示
+                userInput.value = ''; // 清空输入框
+                
+            }
+        });
+
+        // --- Initialization ---
+
+        // 页面加载时执行
+        document.addEventListener('DOMContentLoaded', () => {
+            loadConversationHistory();
+
+            // 配置 marked.js
+            marked.setOptions({
+                breaks: true, 
+                gfm: true,    
+                pedantic: false, 
+                sanitize: false, 
+                smartypants: false
+            });
+
+        });
+
+    </script>
+</body>
+</html>
