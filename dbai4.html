@@ -270,6 +270,7 @@
 <body>
     <div class="container">
         <h1>AI 对话</h1>
+ <img src="https://api.yyy001.com/api/Visits?name=kjmjhai4" height="90" width="800"></img>
         <div>
             <label for="modelSelect">选择 AI 模型:</label>
             <select id="modelSelect">
@@ -314,9 +315,9 @@
         const modelSelect = document.getElementById('modelSelect');
         const loadingIndicator = document.getElementById('loadingIndicator');
 
-        
+
         const apiURL = 'https://api.chatanywhere.tech/v1/chat/completions';
-     
+
         const apiKey = 'sk-Mid2lZZLDlnqEAdFXrzOaEUFWYYysXgbU5gqtbeQPVWhtggv'; 
 
         // 对话历史记录 
@@ -362,7 +363,7 @@
              }
         }
 
-       
+
         function sanitizeHtml(htmlString) {
              const tempDiv = document.createElement('div');
              tempDiv.innerHTML = htmlString;
@@ -374,20 +375,20 @@
                     if (attrName.startsWith('on') || (attrName === 'href' && el.attributes[i].value.trim().toLowerCase().startsWith('javascript:'))) {
                         el.removeAttribute(attrName);
                     }
-                    
+
                 }
              });
              return tempDiv.innerHTML;
         }
 
 
-        
+
         function appendMessage(role, content, shouldScroll = true, isReasoning = false) {
             const messageWrapper = document.createElement('div');
 
             if (isReasoning) {
                  messageWrapper.className = 'reasoning'; // 应用思考过程样式
-              
+
                  messageWrapper.textContent = content;
                  // 如果思考过程也可能是 Markdown，则需要解析和清理:
                  // const unsafeHtml = marked.parse(content || ''); // 处理 null 或 undefined
@@ -476,7 +477,7 @@
                     body: JSON.stringify({
                         model: selectedModel,
                         messages: messagesToSend,
-                        
+
                     })
                 });
 
@@ -567,7 +568,7 @@
                 localStorage.removeItem('conversationHistory'); // 清除本地存储
                 chatbox.innerHTML = ''; // 清空聊天框显示
                 userInput.value = ''; // 清空输入框
-                
+
             }
         });
 
