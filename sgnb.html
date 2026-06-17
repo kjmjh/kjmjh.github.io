@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>森哥NB</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #000;
+            overflow: hidden;
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+        }
+
+        canvas {
+            display: block;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+
+        .text-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2;
+            text-align: center;
+        }
+
+        .main-text {
+            font-size: 120px;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 
+                0 0 10px #ff0000,
+                0 0 20px #ff4500,
+                0 0 30px #ff6347,
+                0 0 40px #ffa500,
+                0 0 50px #ffd700;
+            animation: glow 2s ease-in-out infinite alternate;
+            letter-spacing: 10px;
+        }
+
+        @keyframes glow {
+            from {
+                text-shadow: 
+                    0 0 10px #ff0000,
+                    0 0 20px #ff4500,
+                    0 0 30px #ff6347,
+                    0 0 40px #ffa500,
+                    0 0 50px #ffd700;
+            }
+            to {
+                text-shadow: 
+                    0 0 20px #ff0000,
+                    0 0 30px #ff4500,
+                    0 0 40px #ff6347,
+                    0 0 50px #ffa500,
+                    0 0 60px #ffd700,
+                    0 0 70px #ffff00;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-text {
+                font-size: 60px;
+                letter-spacing: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="fireworks"></canvas>
+    <div class="text-container">
+        <h1 class="main-text">森哥NB</h1>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('fireworks');
+        const ctx = canvas.getContext('2d');
+
+        // 设置画布大小
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        // 烟花类
+        class Firework {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = canvas.height;
+                this.targetY = Math.random() * canvas.height * 0.4 + canvas.height * 0.1;
+                this.speed = Math.random() * 3 + 5;
+                this.angle = -Math.PI / 2 + (Math.random() - 0.5) * 0.2;
+                this.vx = Math.cos(this.angle) * this.speed;
+                this.vy = Math.sin(this.angle) * this.speed;
+                this.exploded = false;
+                this.trail = [];
+                this.color = `hsl(${Math.random() * 360}, 100%, 60%)`;
+            }
+
+            update() {
+                if (!this.exploded) {
+                    this.trail.push({x: this.x, y: this.y});
+                    if (this.trail.length > 10) {
+                        this.trail.shift();
+                    }
+
+                    this.x += this.vx;
+                    this.y += this.vy;
+                    this.vy += 0.05; // 重力
+
+                    if (this.y <= this.targetY) {
+                        this.explode();
+                    }
+                }
+            }
+
+            explode() {
+                this.exploded = true;
+                const particleCount = Math.floor(Math.random() * 50) + 50;
+                for (let i = 0; i < particleCount; i++) {
+                    particles.push(new Particle(this.x, this.y, this.color));
+                }
+            }
+
+            draw() {
+                if (!this.exploded) {
+                    // 绘制轨迹
+                    ctx.beginPath();
+                    ctx.moveTo(this.trail[0]?.x || this.x, this.trail[0]?.y || this.y);
+                    for (let point of this.trail) {
+                        ctx.lineTo(point.x, point.y);
+                    }
+                    ctx.strokeStyle = this.color;
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+
+                    // 绘制烟花头部
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, 3, 0, Math.PI * 2);
+                    ctx.fillStyle = '#fff';
+                    ctx.fill();
+                }
+            }
+        }
+
+        // 粒子类
+        class Particle {
+            constructor(x, y, color) {
+                this.x = x;
+                this.y = y;
+                const angle = Math.random() * Math.PI * 2;
+                const speed = Math.random() * 5 + 2;
+                this.vx = Math.cos(angle) * speed;
+                this.vy = Math.sin(angle) * speed;
+                this.alpha = 1;
+                this.decay = Math.random() * 0.02 + 0.01;
+                this.color = color;
+                this.gravity = 0.1;
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                this.vy += this.gravity;
+                this.vx *= 0.98;
+                this.vy *= 0.98;
+                this.alpha -= this.decay;
+            }
+
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.alpha;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, 2, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        let fireworks = [];
+        let particles = [];
+
+        // 动画循环
+        function animate() {
+            // 创建拖尾效果
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // 随机生成新烟花
+            if (Math.random() < 0.03) {
+                fireworks.push(new Firework());
+            }
+
+            // 更新和绘制烟花
+            fireworks = fireworks.filter(fw => !fw.exploded);
+            fireworks.forEach(fw => {
+                fw.update();
+                fw.draw();
+            });
+
+            // 更新和绘制粒子
+            particles = particles.filter(p => p.alpha > 0);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+    </script>
+</body>
+</html>
